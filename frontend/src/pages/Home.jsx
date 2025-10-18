@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Send, Bot, User, AlertTriangle, Heart, Brain, Clock, Loader, Sparkles, Plus, RotateCcw } from 'lucide-react';
+import { Send, Bot, User, AlertTriangle, Heart, Brain, Clock, Loader, Sparkles, Plus, RotateCcw, Phone, MapPin } from 'lucide-react';
 import axios from 'axios';
 
 // Function to format AI response text
@@ -64,16 +64,36 @@ const Home = () => {
   const [conversation, setConversation] = useState([]);
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState(null);
+  const [helplines, setHelplines] = useState([]);
   const [showNewChatModal, setShowNewChatModal] = useState(false);
   const [sessionId, setSessionId] = useState(null);
+  const [location, setLocation] = useState(null);
   const { user } = useAuth();
   const messagesEndRef = useRef(null);
+
+  // Get user location on component mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.log('Location access denied or unavailable:', error);
+        }
+      );
+    }
+  }, []);
 
   // Load conversation from localStorage on component mount
   useEffect(() => {
     const savedConversation = localStorage.getItem(`conversation_${user?.id}`);
     const savedAnalysis = localStorage.getItem(`analysis_${user?.id}`);
     const savedSessionId = localStorage.getItem(`sessionId_${user?.id}`);
+    const chatContext = localStorage.getItem(`chatContext_${user?.id}`);
     
     if (savedConversation) {
       try {
@@ -105,6 +125,26 @@ const Home = () => {
 
     if (savedSessionId) {
       setSessionId(savedSessionId);
+    }
+
+    // Check for face analysis context and pre-fill message
+    if (chatContext) {
+      try {
+        const context = JSON.parse(chatContext);
+        if (context.type === 'face-analysis') {
+          // Create initial message from face analysis
+          const contextMessage = `I just completed a face analysis that detected my emotional state as "${context.emotion}" with ${context.severity} severity. ${context.description ? context.description : ''} Can you help me understand this better and provide guidance?`;
+          
+          // Pre-fill the message input
+          setMessage(contextMessage);
+          
+          // Clear the context
+          localStorage.removeItem(`chatContext_${user?.id}`);
+        }
+      } catch (error) {
+        console.error('Error processing chat context:', error);
+        localStorage.removeItem(`chatContext_${user?.id}`);
+      }
     }
   }, [user?.id]);
 
@@ -194,11 +234,17 @@ const Home = () => {
 
       const response = await axios.post('/chat/', {
         prompt: message,
-        sessionId: currentSessionId
+        sessionId: currentSessionId,
+        location: location // Send user location for nearby helplines
       });
 
       // Use the analysis and cleaned response from backend
       setAnalysis(response.data.analysis);
+      
+      // Set helplines if provided
+      if (response.data.helplines && response.data.helplines.length > 0) {
+        setHelplines(response.data.helplines);
+      }
 
       const aiResponse = {
         id: Date.now() + 1,
@@ -493,6 +539,40 @@ const Home = () => {
                 </li>
               </ul>
             </div>
+
+            {/* Mental Health Helplines */}
+            {helplines.length > 0 && (
+              <div className="bg-purple-50 rounded-lg p-4 border border-purple-200 mt-4">
+                <div className="flex items-center space-x-2 mb-3">
+                  <MapPin className="h-4 w-4 text-purple-600" />
+                  <h3 className="text-sm font-medium text-purple-900">
+                    {helplines.some(h => h.type === 'local') ? 'Nearby Mental Health Clinics' : 'Mental Health Resources'}
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {helplines.map((helpline, index) => (
+                    <div key={index} className="bg-white rounded-lg p-3 border border-purple-200">
+                      <h4 className="font-semibold text-gray-800 text-sm">{helpline.name}</h4>
+                      <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
+                        <Phone className="w-4 h-4 text-purple-600" />
+                        <a href={`tel:${helpline.phone}`} className="text-purple-600 hover:underline font-medium">
+                          {helpline.phone}
+                        </a>
+                      </div>
+                      {helpline.address && (
+                        <div className="flex items-start gap-2 mt-1">
+                          <MapPin className="w-3 h-3 text-gray-400 mt-0.5 flex-shrink-0" />
+                          <p className="text-xs text-gray-500">{helpline.address}</p>
+                        </div>
+                      )}
+                      {helpline.distance && (
+                        <p className="text-xs text-blue-600 mt-1 font-medium">📍 {helpline.distance} away</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

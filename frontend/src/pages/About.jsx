@@ -1,282 +1,246 @@
 import React from 'react';
-import { Brain, Heart, Shield, Users, Zap, Award, CheckCircle, Star } from 'lucide-react';
+import { Brain, Heart, Shield, Users, Sparkles, Target, Award, TrendingUp } from 'lucide-react';
 
 const About = () => {
   const features = [
     {
-      icon: Brain,
-      title: 'AI-Powered Analysis',
-      description: 'Advanced machine learning algorithms provide personalized mental health insights and recommendations.'
+      icon: <Brain className="w-8 h-8" />,
+      title: "AI-Powered Analysis",
+      description: "Advanced facial emotion recognition using Google's Gemini AI to provide accurate mental health insights."
     },
     {
-      icon: Shield,
-      title: 'Privacy & Security',
-      description: 'Your conversations are encrypted and secure. We prioritize your privacy and confidentiality.'
+      icon: <Heart className="w-8 h-8" />,
+      title: "Compassionate Support",
+      description: "24/7 empathetic AI companion designed to listen, understand, and provide personalized mental health guidance."
     },
     {
-      icon: Heart,
-      title: '24/7 Support',
-      description: 'Access mental health support anytime, anywhere. Our AI is always available when you need it.'
+      icon: <Shield className="w-8 h-8" />,
+      title: "Privacy First",
+      description: "Your conversations and data are encrypted and secure. We prioritize your privacy and confidentiality."
     },
     {
-      icon: Users,
-      title: 'Community Driven',
-      description: 'Built with input from mental health professionals and real user experiences.'
-    },
-    {
-      icon: Zap,
-      title: 'Instant Insights',
-      description: 'Get immediate analysis and feedback to better understand your mental health patterns.'
-    },
-    {
-      icon: Award,
-      title: 'Evidence-Based',
-      description: 'Our recommendations are based on proven therapeutic approaches and scientific research.'
+      icon: <Users className="w-8 h-8" />,
+      title: "Local Resources",
+      description: "Get connected to nearby mental health clinics and professionals based on your location."
     }
   ];
 
   const stats = [
-    { number: '10K+', label: 'Users Helped' },
-    { number: '50K+', label: 'Conversations' },
-    { number: '95%', label: 'User Satisfaction' },
-    { number: '24/7', label: 'Availability' }
+    { number: "10K+", label: "Active Users" },
+    { number: "98%", label: "Satisfaction Rate" },
+    { number: "24/7", label: "Availability" },
+    { number: "50+", label: "Countries" }
   ];
 
-  const teamMembers = [
+  const values = [
     {
-      name: 'Dr. Sarah Johnson',
-      role: 'Clinical Psychologist',
-      description: 'Leading mental health expert with 15+ years of experience in cognitive behavioral therapy.'
+      icon: <Target className="w-6 h-6" />,
+      title: "Our Mission",
+      description: "To make mental health support accessible, affordable, and stigma-free for everyone, everywhere."
     },
     {
-      name: 'Alex Chen',
-      role: 'AI Engineer',
-      description: 'Specialist in natural language processing and machine learning for healthcare applications.'
+      icon: <Award className="w-6 h-6" />,
+      title: "Our Vision",
+      description: "A world where seeking mental health support is as natural as caring for physical health."
     },
     {
-      name: 'Maria Rodriguez',
-      role: 'UX Designer',
-      description: 'Expert in creating compassionate and accessible digital health experiences.'
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: "Our Goal",
+      description: "Empower individuals with AI-driven insights and connect them to professional care when needed."
     }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       {/* Hero Section */}
-      <div className="text-center mb-16">
-        <div className="flex justify-center mb-6">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl">
-            <Brain className="h-12 w-12 text-white" />
+      <div className="relative overflow-hidden bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <div className="absolute inset-0 bg-black opacity-10"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
+                <Brain className="w-16 h-16 text-white" />
+              </div>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
+              About MindCare AI
+            </h1>
+            <p className="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
+              Your trusted AI companion for mental wellness, combining cutting-edge technology 
+              with compassionate care to support your mental health journey.
+            </p>
           </div>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          About MindCare AI
-        </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Empowering individuals on their mental wellness journey through compassionate AI technology 
-          and evidence-based support. Your mental health matters, and we're here to help.
-        </p>
-      </div>
-
-      {/* Mission Statement */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mb-16">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
-          <p className="text-lg text-gray-700 leading-relaxed">
-            At MindCare AI, we believe that mental health support should be accessible, immediate, and personalized. 
-            Our mission is to bridge the gap between traditional therapy and everyday mental wellness needs by 
-            providing intelligent, compassionate AI assistance that helps individuals understand their mental health 
-            patterns and develop coping strategies.
-          </p>
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+          </svg>
         </div>
       </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-        {stats.map((stat, index) => (
-          <div key={index} className="text-center bg-white rounded-xl shadow-lg p-6">
-            <div className="text-3xl font-bold text-blue-600 mb-2">{stat.number}</div>
-            <div className="text-gray-600">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Features Section */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
-          Why Choose MindCare AI?
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <div key={index} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Icon className="h-6 w-6 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <div 
+              key={index}
+              className="bg-white rounded-2xl shadow-xl p-6 text-center transform hover:scale-105 transition-transform duration-300"
+            >
+              <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
+                {stat.number}
               </div>
-            );
-          })}
+              <div className="text-gray-600 mt-2 font-medium">{stat.label}</div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* How It Works */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
-          How MindCare AI Works
-        </h2>
-        <div className="max-w-4xl mx-auto">
-          <div className="space-y-8">
-            {[
-              {
-                step: 1,
-                title: 'Share Your Thoughts',
-                description: 'Express what\'s on your mind in a safe, judgment-free environment. Our AI listens with empathy and understanding.'
-              },
-              {
-                step: 2,
-                title: 'Receive Intelligent Analysis',
-                description: 'Our AI analyzes your message using advanced natural language processing to identify patterns and concerns.'
-              },
-              {
-                step: 3,
-                title: 'Get Personalized Insights',
-                description: 'Receive tailored feedback, coping strategies, and recommendations based on evidence-based therapeutic approaches.'
-              },
-              {
-                step: 4,
-                title: 'Track Your Progress',
-                description: 'Monitor your mental health journey over time with detailed conversation history and progress tracking.'
-              }
-            ].map((item, index) => (
-              <div key={index} className="flex items-start space-x-6">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-bold">{item.step}</span>
+      {/* Story Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+              <Sparkles className="w-4 h-4" />
+              Our Story
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Transforming Mental Health Care with AI
+            </h2>
+            <p className="text-lg text-gray-700 mb-4 leading-relaxed">
+              MindCare AI was born from a simple yet powerful belief: mental health support 
+              should be accessible to everyone, anytime, anywhere. We leverage the latest 
+              advancements in artificial intelligence to provide immediate, personalized, 
+              and compassionate mental health support.
+            </p>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Our platform combines advanced facial emotion recognition, natural language 
+              processing, and a deep understanding of mental health to create a supportive 
+              environment where you can explore your feelings, get insights, and find the 
+              help you need.
+            </p>
+          </div>
+          <div className="relative">
+            <div className="bg-gradient-to-br from-purple-400 to-blue-500 rounded-3xl p-8 shadow-2xl">
+              <div className="bg-white rounded-2xl p-8">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="text-center">
+                    <Heart className="w-12 h-12 text-red-500 mx-auto mb-3" />
+                    <p className="text-gray-700 font-medium">Empathy Driven</p>
+                  </div>
+                  <div className="text-center">
+                    <Brain className="w-12 h-12 text-purple-500 mx-auto mb-3" />
+                    <p className="text-gray-700 font-medium">AI Powered</p>
+                  </div>
+                  <div className="text-center">
+                    <Shield className="w-12 h-12 text-blue-500 mx-auto mb-3" />
+                    <p className="text-gray-700 font-medium">Secure & Private</p>
+                  </div>
+                  <div className="text-center">
+                    <Users className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                    <p className="text-gray-700 font-medium">Community Focus</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-600">{item.description}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Why Choose MindCare AI?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              We combine technology and compassion to deliver exceptional mental health support
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <div 
+                key={index}
+                className="group p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <div className="text-purple-600 mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                  {feature.icon}
                 </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Team Section */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
-          Meet Our Team
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {teamMembers.map((member, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">
-                  {member.name.split(' ').map(n => n[0]).join('')}
-                </span>
+      {/* Values Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Our Values
+          </h2>
+          <p className="text-xl text-gray-600">
+            The principles that guide everything we do
+          </p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {values.map((value, index) => (
+            <div 
+              key={index}
+              className="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-purple-500 hover:shadow-2xl transition-shadow duration-300"
+            >
+              <div className="bg-purple-100 rounded-full w-14 h-14 flex items-center justify-center text-purple-600 mb-4">
+                {value.icon}
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{member.name}</h3>
-              <p className="text-blue-600 font-medium mb-3">{member.role}</p>
-              <p className="text-gray-600 text-sm">{member.description}</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                {value.title}
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+                {value.description}
+              </p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Safety & Ethics */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 mb-16">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-            Safety & Ethics First
+      {/* CTA Section */}
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-6">
+            Ready to Start Your Mental Wellness Journey?
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                <Shield className="h-5 w-5 text-blue-600" />
-                <span>Data Privacy</span>
-              </h3>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>End-to-end encryption</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>HIPAA compliant</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>No data selling</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Anonymous processing</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                <Heart className="h-5 w-5 text-red-500" />
-                <span>Ethical AI</span>
-              </h3>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Bias-free algorithms</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Transparent processes</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Human oversight</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Continuous monitoring</span>
-                </li>
-              </ul>
-            </div>
+          <p className="text-xl text-purple-100 mb-8">
+            Join thousands of users who trust MindCare AI for their mental health support
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="/register"
+              className="bg-white text-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-50 transition-colors duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
+            >
+              Get Started Free
+            </a>
+            <a 
+              href="/home"
+              className="bg-purple-700 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-purple-800 transition-colors duration-300 border-2 border-white/30"
+            >
+              Try Face Analysis
+            </a>
           </div>
         </div>
       </div>
 
-      {/* Disclaimer */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-16">
-        <div className="flex items-start space-x-3">
-          <div className="bg-yellow-100 p-2 rounded-full">
-            <Shield className="h-5 w-5 text-yellow-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-yellow-800 mb-2">Important Disclaimer</h3>
-            <p className="text-yellow-700 text-sm">
-              MindCare AI is designed to provide supportive guidance and insights, but it is not a substitute 
-              for professional mental health treatment. If you are experiencing a mental health crisis or 
-              suicidal thoughts, please contact a mental health professional, your local emergency services, 
-              or a crisis hotline immediately.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Contact CTA */}
-      <div className="text-center bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-white">
-        <h2 className="text-2xl font-bold mb-4">Ready to Start Your Journey?</h2>
-        <p className="text-blue-100 mb-6">
-          Take the first step towards better mental health with MindCare AI
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-          <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-            Start Conversation
-          </button>
-          <button className="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-blue-600 transition-colors">
-            Contact Support
-          </button>
+      {/* Footer Note */}
+      <div className="bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-gray-600">
+            <span className="font-semibold text-gray-900">Note:</span> MindCare AI is designed to provide support and guidance. 
+            For serious mental health concerns, please consult with a licensed professional.
+          </p>
         </div>
       </div>
     </div>

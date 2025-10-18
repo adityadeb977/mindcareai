@@ -54,7 +54,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
  * @access  Private
  */
 const generateResponse = async (req, res) => {
-  const { prompt, sessionId } = req.body;
+  const { prompt, sessionId, location } = req.body;
   const userId = req.user._id; // Get user ID from the protect middleware
 
   if (!prompt) {
@@ -163,6 +163,11 @@ const generateResponse = async (req, res) => {
       });
     }
 
+    // Get nearby mental health helplines based on severity
+    const helplines = (analysis.severity === 'high' || analysis.severity === 'moderate') 
+      ? await getNearbyHelplines(location) 
+      : [];
+
     res.status(201).json({
       _id: history._id,
       sessionId: history.sessionId,
@@ -170,6 +175,7 @@ const generateResponse = async (req, res) => {
       prompt: history.prompt,
       response: analysis.cleanedResponse, // Return cleaned response to frontend
       analysis: analysis,
+      helplines: helplines,
       createdAt: history.createdAt,
       updatedAt: history.updatedAt
     });
@@ -234,4 +240,219 @@ const deleteHistory = async (req, res) => {
   }
 };
 
-module.exports = { generateResponse, getHistory, deleteHistory };
+/**
+ * @desc    Analyze facial expression from image
+ * @route   POST /api/chat/analyze-face
+ * @access  Private
+ */
+const analyzeFace = async (req, res) => {
+  console.log('analyzeFace endpoint hit');
+  const { image, location } = req.body;
+  const userId = req.user._id;
+
+  console.log('Image received:', image ? 'Yes' : 'No');
+  console.log('User ID:', userId);
+
+  if (!image) {
+    return res.status(400).json({ message: 'Image is required' });
+  }
+
+  try {
+    // Extract base64 data from data URL
+    const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+    const imageBuffer = Buffer.from(base64Data, 'base64');
+
+    // Convert to the format Gemini expects
+    const imagePart = {
+      inlineData: {
+        data: base64Data,
+        mimeType: 'image/jpeg'
+      }
+    };
+
+    const preferredModels = [
+      (process.env.GEMINI_MODEL || 'gemini-2.5-flash').trim(),
+      'gemini-2.5-flash',
+      'gemini-2.0-flash'
+    ];
+
+    const prompt = `
+      You are an expert mental health AI assistant. Analyze this person's facial expression in the image.
+      
+      Based on their facial features, micro-expressions, and overall demeanor, provide:
+      1. The primary emotion detected (e.g., happiness, sadness, anxiety, stress, neutral, anger, fear)
+      2. Overall sentiment (positive, negative, or neutral)
+      3. Severity level of any negative emotions (low, moderate, high)
+      4. A brief description of what you observe
+      5. 3-5 helpful suggestions for emotional wellbeing
+      
+      Respond in this exact JSON format:
+      {
+        "emotion": "primary emotion here",
+        "sentiment": "positive/negative/neutral",
+        "severity": "low/moderate/high",
+        "description": "your observation here",
+        "suggestions": ["suggestion 1", "suggestion 2", "suggestion 3"]
+      }
+      
+      Be compassionate and supportive. Do NOT provide medical diagnosis.
+    `;
+
+    let aiResponse;
+    let lastErr;
+    for (const modelName of preferredModels) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent([prompt, imagePart]);
+        aiResponse = await result.response.text();
+        break;
+      } catch (err) {
+        lastErr = err;
+        const status = err?.status;
+        const msg = err?.message || '';
+        if (status === 404 || /not found|not supported/i.test(msg)) {
+          continue;
+        }
+        throw err;
+      }
+    }
+
+    if (!aiResponse) {
+      throw lastErr || new Error('All models failed to process the image');
+    }
+
+    // Parse JSON response
+    let analysis;
+    try {
+      // Remove markdown code blocks if present
+      const cleanedResponse = aiResponse.replace(/```json\n?|\n?```/g, '').trim();
+      analysis = JSON.parse(cleanedResponse);
+    } catch (parseErr) {
+      // Fallback if JSON parsing fails
+      analysis = {
+        emotion: 'Unable to determine',
+        sentiment: 'neutral',
+        severity: 'low',
+        description: aiResponse,
+        suggestions: ['Take deep breaths', 'Practice mindfulness', 'Talk to someone you trust']
+      };
+    }
+
+    // Get nearby mental health helplines based on location
+    const helplines = await getNearbyHelplines(location);
+
+    // Save to history
+    const newHistory = new History({
+      user: userId,
+      prompt: 'Face Analysis',
+      response: `Emotion: ${analysis.emotion}\n${analysis.description}`,
+      analysis: {
+        sentiment: analysis.sentiment,
+        severity: analysis.severity,
+        topics: [analysis.emotion],
+        suggestions: analysis.suggestions
+      },
+      type: 'face-analysis'
+    });
+
+    await newHistory.save();
+
+    res.json({
+      analysis,
+      helplines,
+      message: 'Face analysis completed successfully'
+    });
+
+  } catch (error) {
+    console.error('Face analysis error:', error);
+    res.status(500).json({ 
+      message: 'Failed to analyze face',
+      error: error.message 
+    });
+  }
+};
+
+/**
+ * Get nearby mental health helplines based on user location
+ * @param {Object} location - { latitude, longitude }
+ * @returns {Array} Array of helpline objects
+ */
+const getNearbyHelplines = async (location) => {
+  // Default helplines (US-based)
+  const defaultHelplines = [
+    {
+      name: 'National Suicide Prevention Lifeline',
+      phone: '988',
+      address: 'Available 24/7 nationwide',
+      type: 'crisis'
+    },
+    {
+      name: 'Crisis Text Line',
+      phone: 'Text HOME to 741741',
+      address: 'Available 24/7 nationwide',
+      type: 'crisis'
+    },
+    {
+      name: 'SAMHSA National Helpline',
+      phone: '1-800-662-4357',
+      address: 'Treatment referral and information',
+      type: 'general'
+    },
+    {
+      name: 'NAMI Helpline',
+      phone: '1-800-950-6264',
+      address: 'Mental health support and resources',
+      type: 'general'
+    }
+  ];
+
+  // If location is provided, fetch nearby mental health clinics using Google Places API
+  if (location && location.latitude && location.longitude) {
+    try {
+      const { GoogleGenerativeAI } = require('@google/generative-ai');
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp' });
+
+      // Use Gemini to search for mental health clinics based on location
+      const prompt = `Find 3-5 real mental health clinics, counseling centers, or psychiatric facilities near coordinates ${location.latitude}, ${location.longitude}. 
+
+For each clinic, provide:
+- name: Full name of the facility
+- phone: Phone number (if available, otherwise use "Call 411 for local directory")
+- address: Full street address with city and state
+- distance: Approximate distance from the given coordinates
+
+Return ONLY a valid JSON array with this exact structure:
+[
+  {
+    "name": "Example Mental Health Center",
+    "phone": "555-123-4567",
+    "address": "123 Main St, City, State ZIP",
+    "distance": "0.5 miles",
+    "type": "local"
+  }
+]
+
+Important: Return ONLY the JSON array, no other text.`;
+
+      const result = await model.generateContent(prompt);
+      const responseText = result.response.text();
+      
+      // Extract JSON from response
+      const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+      if (jsonMatch) {
+        const nearbyFacilities = JSON.parse(jsonMatch[0]);
+        
+        // Combine nearby facilities with national helplines
+        return [...nearbyFacilities, ...defaultHelplines];
+      }
+    } catch (error) {
+      console.error('Error fetching nearby facilities:', error);
+      // Fall back to default helplines on error
+    }
+  }
+
+  return defaultHelplines;
+};
+
+module.exports = { generateResponse, getHistory, deleteHistory, analyzeFace };

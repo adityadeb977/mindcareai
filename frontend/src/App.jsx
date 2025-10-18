@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import History from './pages/History';
+import FaceAnalysis from './pages/FaceAnalysis';
 import About from './pages/About';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -65,12 +66,16 @@ function AppContent() {
             } 
           />
           <Route 
-            path="/about" 
+            path="/face-analysis" 
             element={
               <ProtectedRoute>
-                <About />
+                <FaceAnalysis />
               </ProtectedRoute>
             } 
+          />
+          <Route 
+            path="/about" 
+            element={<About />} 
           />
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>

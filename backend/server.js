@@ -40,7 +40,10 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 })); // Enable Cross-Origin Resource Sharing
-app.use(express.json()); // Allow the server to accept JSON data in request bodies
+
+// Increase body size limit for image uploads (base64 encoded images can be large)
+app.use(express.json({ limit: '50mb' })); // Allow the server to accept JSON data in request bodies
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // Allow URL-encoded data
 
 // Health check endpoint for deployment platforms
 app.get('/healthz', (req, res) => {

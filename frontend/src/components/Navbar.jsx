@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Brain, Menu, X, Home, History, Info, LogOut, User } from 'lucide-react';
+import { Brain, Menu, X, Home, History, Info, LogOut, User, Camera } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +16,7 @@ const Navbar = () => {
 
   const navItems = [
     { path: '/home', label: 'Home', icon: Home },
+    { path: '/face-analysis', label: 'Face Analysis', icon: Camera },
     { path: '/history', label: 'History', icon: History },
     { path: '/about', label: 'About', icon: Info },
   ];

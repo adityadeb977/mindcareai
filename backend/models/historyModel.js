@@ -10,7 +10,12 @@ const historySchema = mongoose.Schema(
     },
     sessionId: {
       type: String,
-      required: true,
+      required: false,
+    },
+    type: {
+      type: String,
+      enum: ['chat', 'face-analysis'],
+      default: 'chat'
     },
     messages: [{
       prompt: {
@@ -42,8 +47,11 @@ const historySchema = mongoose.Schema(
       required: true,
     },
     analysis: {
-      mainConcern: String,
+      sentiment: String,
       severity: String,
+      topics: [String],
+      suggestions: [String],
+      mainConcern: String,
       relatedSymptoms: [String],
       cleanedResponse: String,
     },
